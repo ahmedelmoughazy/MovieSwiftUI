@@ -11,7 +11,7 @@ import SwiftUIFlux
 
 struct MyLists : View {
     @EnvironmentObject private var store: Store<AppState>
-        
+    
     // MARK: - Vars
     @State private var selectedList: Int = 0
     @State private var selectedMoviesSort = MoviesSort.byReleaseDate
@@ -24,13 +24,13 @@ struct MyLists : View {
     }
     
     var wishlist: [Int] {
-        store.state.moviesState.wishlist.map{ $0.id }.sortedMoviesIds(by: selectedMoviesSort,
-                                                                      state: store.state)
+        store.state.moviesState.wishlist.map{ $0 }.sortedMoviesIds(by: selectedMoviesSort,
+                                                                   state: store.state)
     }
     
     var seenlist: [Int] {
-        store.state.moviesState.seenlist.map{ $0.id }.sortedMoviesIds(by: selectedMoviesSort,
-                                                                      state: store.state)
+        store.state.moviesState.seenlist.map{ $0 }.sortedMoviesIds(by: selectedMoviesSort,
+                                                                   state: store.state)
     }
     
     // MARK: - Dynamic views
@@ -63,29 +63,29 @@ struct MyLists : View {
     
     private var wishlistSection: some View {
         Section(header: Text("\(wishlist.count) movies in wishlist (\(selectedMoviesSort.title()))")) {
-            ForEach(wishlist) {id in
+            ForEach(wishlist, id: \.self) { id in
                 NavigationLink(destination: MovieDetail(movieId: id).environmentObject(self.store)) {
                     MovieRow(movieId: id, displayListImage: false)
                 }
-                }
-                .onDelete { (index) in
-                    let movie = self.wishlist[index.first!]
-                    self.store.dispatch(action: MoviesActions.RemoveFromWishlist(movie: movie))
-                    
+            }
+            .onDelete { (index) in
+                let movie = self.wishlist[index.first!]
+                self.store.dispatch(action: MoviesActions.RemoveFromWishlist(movie: movie))
+                
             }
         }
     }
     
     private var seenSection: some View {
         Section(header: Text("\(seenlist.count) movies in seenlist (\(selectedMoviesSort.title()))")) {
-            ForEach(seenlist) {id in
+            ForEach(seenlist, id: \.self) { id in
                 NavigationLink(destination: MovieDetail(movieId: id).environmentObject(self.store)) {
                     MovieRow(movieId: id, displayListImage: false)
                 }
-                }
-                .onDelete { (index) in
-                    let movie = self.seenlist[index.first!]
-                    self.store.dispatch(action: MoviesActions.RemoveFromSeenList(movie: movie))
+            }
+            .onDelete { (index) in
+                let movie = self.seenlist[index.first!]
+                self.store.dispatch(action: MoviesActions.RemoveFromSeenList(movie: movie))
             }
         }
     }
@@ -95,10 +95,13 @@ struct MyLists : View {
         NavigationView {
             List {
                 customListsSection
-                SegmentedControl(selection: $selectedList) {
+                
+                Picker("", selection: $selectedList) {
                     Text("Wishlist").tag(0)
                     Text("Seenlist").tag(1)
                 }
+                .pickerStyle(.segmented)
+                
                 if selectedList == 0 {
                     wishlistSection
                 } else if selectedList == 1 {
@@ -108,7 +111,7 @@ struct MyLists : View {
             .actionSheet(isPresented: $isSortActionSheetPresented, content: { sortActionSheet })
             .navigationBarTitle(Text("My Lists"))
             .navigationBarItems(trailing: Button(action: {
-                    self.isSortActionSheetPresented.toggle()
+                self.isSortActionSheetPresented.toggle()
             }, label: {
                 Image(systemName: "line.horizontal.3.decrease.circle")
                     .resizable()
@@ -117,10 +120,10 @@ struct MyLists : View {
         }
         .sheet(isPresented: $isEditingFormPresented,
                onDismiss: { self.isEditingFormPresented = false }) {
-                CustomListForm(editingListId: nil,
-                               shouldDismiss: {
-                    self.isEditingFormPresented = false
-                }).environmentObject(self.store)
+            CustomListForm(editingListId: nil,
+                           shouldDismiss: {
+                self.isEditingFormPresented = false
+            }).environmentObject(self.store)
         }
     }
 }

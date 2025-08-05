@@ -25,7 +25,7 @@ struct BorderedButton : View {
             }
         })
             .padding(6)
-            .border(color, width: isOn ? 0 : 1, cornerRadius: 8)
+            .border(color, width: isOn ? 0 : 1)
             .background(isOn ? color : Color.clear)
             .cornerRadius(8)
     }

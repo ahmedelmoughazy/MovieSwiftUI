@@ -12,7 +12,7 @@ import Foundation
 struct SettingsForm : View {
     @State var selectedRegion: Int = 0
     @State var alwaysOriginalTitle: Bool = false
-    @Environment(\.isPresented) var isPresented
+    @Environment(\.dismiss) var dismiss
     
     var countries: [String] {
         get {
@@ -76,14 +76,14 @@ struct SettingsForm : View {
             }
             .navigationBarItems(
                 leading: Button(action: {
-                    self.isPresented?.value = false
+                    self.dismiss()
                 }, label: {
                     Text("Cancel").foregroundColor(.red)
                 }),
                 trailing: Button(action: {
                     AppUserDefaults.region = NSLocale.isoCountryCodes[self.selectedRegion]
                     AppUserDefaults.alwaysOriginalTitle = self.alwaysOriginalTitle
-                    self.isPresented?.value = false
+                    self.dismiss()
                 }, label: {
                     Text("Save")
                 }))

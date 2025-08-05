@@ -11,12 +11,20 @@ import Combine
 import SwiftUIFlux
 
 struct MoviesHome : View {
-    @ObjectBinding private var selectedMenu = MoviesSelectedMenuStore(selectedMenu: .popular)
+    @ObservedObject private var selectedMenu = MoviesSelectedMenuStore(selectedMenu: .popular)
     @State private var isSettingPresented = false
     
     private var segmentedView: some View {
-        ScrollableSelector(items: MoviesMenu.allCases.map{ $0.title() },
-                           selection: $selectedMenu.menu.rawValue)
+        ScrollableSelector(
+            items: MoviesMenu.allCases.map{ $0.title() },
+            selection: Binding(
+                get: {
+                    selectedMenu.menu.rawValue
+                }, set: { value in
+                    selectedMenu.menu = MoviesMenu(rawValue: value)!
+                }
+            )
+        )
     }
     
     var body: some View {

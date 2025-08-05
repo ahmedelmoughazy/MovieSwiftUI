@@ -9,8 +9,9 @@
 import Foundation
 import Combine
 import SwiftUI
+import SwiftUIFlux
 
-final class MoviesSelectedMenuStore: BindableObject {
+final class MoviesSelectedMenuStore: ObservableObject {
     var willChange = PassthroughSubject<Void, Never>()
     let pageListener: MoviesMenuListPageListener
     

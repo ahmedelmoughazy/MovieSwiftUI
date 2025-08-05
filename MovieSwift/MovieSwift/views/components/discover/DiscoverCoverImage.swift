@@ -20,7 +20,7 @@ struct DiscoverPosterStyle: ViewModifier {
 
 extension View {
     func discoverPosterStyle() -> some View {
-        return Modified(content: self, modifier: DiscoverPosterStyle())
+        modifier(DiscoverPosterStyle())
     }
 }
 
@@ -46,8 +46,9 @@ struct DiscoverCoverImage : View {
                     .foregroundColor(.clear)
                     .frame(width: 50, height: 50)
             }
-            }.onAppear {
-                self.imageLoader.loadImage()
+        }
+        .onAppear {
+            self.imageLoader.loadImage()
         }
     }
 }

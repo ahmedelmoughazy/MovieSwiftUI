@@ -35,7 +35,7 @@ struct MovieReviews : View {
             }
         .navigationViewStyle(.stack)
         .onAppear{
-                self.store.dispatch(action: MoviesActions.FetchMovieReviews(movie: self.movie.id))
+                self.store.dispatch(action: MoviesActions.FetchMovieReviews(movie: movie))
             }
     }
 }

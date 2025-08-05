@@ -11,15 +11,15 @@ import SwiftUIFlux
 
 // MARK:- Shared View
 struct HomeView: View {
-    #if targetEnvironment(macCatalyst)
+#if targetEnvironment(macCatalyst)
     var body: some View {
         SplitView()
     }
-    #else
+#else
     var body: some View {
         TabbarView()
     }
-    #endif
+#endif
 }
 
 // MARK: - iOS implementation
@@ -39,18 +39,26 @@ struct TabbarView: View {
     }
     
     var body: some View {
-        TabbedView(selection: $selectedTab) {
-            MoviesHome().tabItem{
-                self.tabbarItem(text: "Movies", image: "film")
-            }.tag(Tab.movies)
-            DiscoverView().tabItem{
-                self.tabbarItem(text: "Discover", image: "square.stack")
-            }.tag(Tab.discover)
-            MyLists().tabItem{
-                self.tabbarItem(text: "My Lists", image: "heart.circle")
-            }.tag(Tab.myLists)
-            }
-            .edgesIgnoringSafeArea(.top)
+        TabView(selection: $selectedTab) {
+            MoviesHome()
+                .tabItem {
+                    self.tabbarItem(text: "Movies", image: "film")
+                }
+                .tag(Tab.movies)
+            
+            DiscoverView()
+                .tabItem {
+                    self.tabbarItem(text: "Discover", image: "square.stack")
+                }
+                .tag(Tab.discover)
+            
+            MyLists()
+                .tabItem {
+                    self.tabbarItem(text: "My Lists", image: "heart.circle")
+                }
+                .tag(Tab.myLists)
+        }
+        .edgesIgnoringSafeArea(.top)
     }
 }
 

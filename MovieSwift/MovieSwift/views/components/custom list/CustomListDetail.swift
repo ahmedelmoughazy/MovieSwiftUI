@@ -90,10 +90,10 @@ struct CustomListDetail : View {
             }
             SearchField(searchTextWrapper: searchTextWrapper,
                         placeholder: "Search movies to add to your list")
-                .listRowInsets(EdgeInsets())
-                .padding(4)
-                .tapAction {
-                    self.searchTextWrapper.searchText = ""
+            .listRowInsets(EdgeInsets())
+            .padding(4)
+            .onTapGesture {
+                self.searchTextWrapper.searchText = ""
             }
             if isSearching {
                 if searchedMovies?.isEmpty == true {
@@ -101,12 +101,12 @@ struct CustomListDetail : View {
                 } else if searchedMovies == nil {
                     Text("Loading")
                 } else {
-                    ForEach(searchedMovies!) { movie in
+                    ForEach(searchedMovies!, id: \.self) { movie in
                         MovieRow(movieId: movie, displayListImage: false)
                     }
                 }
             } else {
-                ForEach(movies) { movie in
+                ForEach(movies, id: \.self) { movie in
                     NavigationLink(destination: MovieDetail(movieId: movie).environmentObject(self.store)) {
                         MovieRow(movieId: movie, displayListImage: false)
                     }
@@ -117,18 +117,17 @@ struct CustomListDetail : View {
             
         }
         .environment(\.editMode, .constant(searchedMovies != nil && searchedMovies?.isEmpty == false ? .active : .inactive))
-            .navigationBarTitle(Text(""),
-                                displayMode: isSearching ? .inline : .automatic)
-            .navigationBarItems(trailing: navbarButton)
-            .edgesIgnoringSafeArea(isSearching ? .leading : .top)
-            .actionSheet(isPresented: $isSortActionSheetPresented, content: { sortActionSheet })
-            .sheet(isPresented: $isEditingFormPresented,
-                   onDismiss: { self.isEditingFormPresented = false },
-                   content: { CustomListForm(editingListId: self.listId,
-                                             shouldDismiss: {
-                                                self.isEditingFormPresented = false
-                   }).environmentObject(self.store)
-            })
+        .navigationBarTitle(Text(""), displayMode: isSearching ? .inline : .automatic)
+        .navigationBarItems(trailing: navbarButton)
+        .edgesIgnoringSafeArea(isSearching ? .leading : .top)
+        .actionSheet(isPresented: $isSortActionSheetPresented, content: { sortActionSheet })
+        .sheet(isPresented: $isEditingFormPresented,
+               onDismiss: { self.isEditingFormPresented = false },
+               content: { CustomListForm(editingListId: self.listId,
+                                         shouldDismiss: {
+                   self.isEditingFormPresented = false
+               }).environmentObject(self.store)
+        })
     }
 }
 

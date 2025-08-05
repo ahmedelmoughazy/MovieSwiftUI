@@ -49,7 +49,7 @@ struct MoviesList : View {
     // Mark: - Computed views
     
     private var moviesRows: some View {
-        ForEach(isSearching ? searchedMovies! : movies) { id in
+        ForEach(isSearching ? searchedMovies! : movies, id: \.self) { id in
             NavigationLink(destination: MovieDetail(movieId: id).environmentObject(self.store)) {
                 MovieRow(movieId: id)
             }
@@ -83,7 +83,7 @@ struct MoviesList : View {
             } else if isSearching && searchPeoples?.isEmpty == true {
                 Text("No results")
             } else {
-                ForEach(searchPeoples!) { id in
+                ForEach(searchPeoples!, id: \.self) { id in
                     NavigationLink(destination: PeopleDetail(peopleId: id).environmentObject(self.store)) {
                         PeopleRow(people: self.store.state.peoplesState.peoples[id]!)
                     }
@@ -108,10 +108,11 @@ struct MoviesList : View {
     }
     
     private var searchFilterView: some View {
-        SegmentedControl(selection: $searchFilter) {
+        Picker("", selection: $searchFilter) {
             Text("Movies").tag(SearchFilter.movies.rawValue)
             Text("People").tag(SearchFilter.peoples.rawValue)
         }
+        .pickerStyle(.segmented)
     }
     
     // MARK: - Views

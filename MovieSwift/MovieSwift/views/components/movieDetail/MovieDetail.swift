@@ -116,9 +116,10 @@ struct MovieDetail : View {
             List {
                 MovieBackdrop(movieId: movie.id)
                 MovieRatingRow(movie: movie)
-                MovieAddToListRow(movieId: movie.id).tapAction {
-                    self.addSheetShown = true
-                }
+                MovieAddToListRow(movieId: movie.id)
+                    .onTapGesture {
+                        self.addSheetShown = true
+                    }
                 MovieOverview(movie: movie)
                 Group {
                     if movie.keywords?.keywords != nil && movie.keywords?.keywords?.isEmpty == false {

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct SearchField : View {
-    @ObjectBinding var searchTextWrapper: SearchTextWrapper
+    @ObservedObject var searchTextWrapper: SearchTextWrapper
     let placeholder: String
     var dismissButtonTitle = "Cancel"
     var dismissButtonCallback: (() -> Void)?

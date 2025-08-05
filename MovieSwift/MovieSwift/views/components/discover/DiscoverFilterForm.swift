@@ -11,7 +11,7 @@ import SwiftUIFlux
 
 struct DiscoverFilterForm : View {
     @EnvironmentObject private var store: Store<AppState>
-    @Environment(\.isPresented) var isPresented
+    @Environment(\.dismiss) var dismiss
     
     let datesText = ["Random",
                      "1950-1960",
@@ -112,7 +112,7 @@ struct DiscoverFilterForm : View {
         Group {
             Section {
                 Button(action: {
-                    self.isPresented?.value = false
+                    self.dismiss()
                     if let toSave = self.formFilter {
                         self.store.dispatch(action: MoviesActions.SaveDiscoverFilter(filter: toSave))
                     }
@@ -124,7 +124,7 @@ struct DiscoverFilterForm : View {
                 })
                 
                 Button(action: {
-                    self.isPresented?.value = false
+                    self.dismiss()
                 }, label: {
                     Text("Cancel").foregroundColor(.red)
                 })
@@ -135,7 +135,7 @@ struct DiscoverFilterForm : View {
                     self.selectedCountry = 0
                     self.selectedDate = 0
                     self.selectedGenre = 0
-                    self.isPresented?.value = false
+                    self.dismiss()
                     self.store.dispatch(action: MoviesActions.ResetRandomDiscover())
                     self.store.dispatch(action: MoviesActions.FetchRandomDiscover())
                 }, label: {
@@ -151,15 +151,15 @@ struct DiscoverFilterForm : View {
                 Section(header: Text("Saved filters"), content: {
                     ForEach(0 ..< self.savedFilters.count) { index in
                         Text(self.savedFilters[index].toText(state: self.store.state))
-                            .tapAction {
-                                self.isPresented?.value = false
+                            .onTapGesture {
+                                self.dismiss()
                                 self.store.dispatch(action: MoviesActions.ResetRandomDiscover())
                                 self.store.dispatch(action: MoviesActions.FetchRandomDiscover(filter: self.savedFilters[index]))
                         }
                     }
                     Text("Delete saved filters")
                         .foregroundColor(.red)
-                        .tapAction {
+                        .onTapGesture {
                             self.store.dispatch(action: MoviesActions.ClearSavedDiscoverFilters())
                     }
                 })
